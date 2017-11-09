@@ -19,7 +19,7 @@ Or install it yourself as:
 
 ## Usage
  - Login
- ```
+ ```ruby
  user = User.new 'username', 'password'
  p Instagram::API::Accounts.login(user)
  ```
