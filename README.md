@@ -18,10 +18,34 @@ Or install it yourself as:
     $ gem install instagram-private-api
 
 ## Usage
- - Login
+ - Login _for clearly new user_
  ```ruby
  user = User.new 'username', 'password'
  p Instagram::API::Accounts.login(user)
+ ```
+ 
+ - Initiate existing user
+ ```ruby
+ logged_in_user = User.find(id: 1)
+ data = {}
+ data[:id] = logged_in_user.pk.
+ data[:full_name] = logged_in_user.full_name
+ data[:is_private] = logged_in_user.is_private
+ data[:profile_pic_url] = logged_in_user.profile_pic_url
+ data[:profile_pic_id] = logged_in_user.profile_pic_id
+ data[:is_verified] = logged_in_user.is_verified
+ data[:is_business] = logged_in_user.is_business
+ session = logged_in_user.session
+ 
+ user = User.new 'username', nil, data, session #password isn't mandatory, already have session
+ p Instagram::API::Account.search_for_user(user, 'ogiyuka_ippaiwarae216') #then you can use it for any purpose
+ ```
+ 
+ - Search for user
+ ```ruby
+ user = User.new 'username', 'password'
+ Instagram::API::Accounts.login user #no need to re-assign, because this method update it for you
+ p Instagram::API::Account.search_for_user user, 'ogiyuka_ippaiwarae216'
  ```
 ## Development
 
