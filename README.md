@@ -1,6 +1,6 @@
 # Instagram::API
 
-Welcome to Instagram-API gem! This Gem is interpreted from [huttarichard/instagram-private-api](https://github.com/huttarichard/instagram-private-api) the best `Node-JS` Insgtagram private API
+Welcome to Instagram-API gem! This Gem is implemented from [huttarichard/instagram-private-api](https://github.com/huttarichard/instagram-private-api) the best `Node-JS` Insgtagram private API
 ## Installation
 
 Add this line to your application's Gemfile:
