@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['vicoerv']
   spec.email         = ['vicoerv@gmail.com']
 
-  spec.summary       = 'Instagram private api. unable to change case of gem name with indexed version, thanks'
+  spec.summary       = 'Instagram private api, interpreted from huttarichard/instagram-private-api as best NODE-JS Instagram api'
   spec.description   = spec.summary
   spec.homepage      = 'http://www.vicoervanda.com'
   spec.license       = 'MIT'

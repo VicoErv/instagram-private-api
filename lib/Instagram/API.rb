@@ -55,7 +55,8 @@ module Instagram
                                                                                                     login_attempt_user: 0, password: user.password, username: user.username,
                                                                                                     _csrftoken: 'missing', _uuid: Instagram::API.generate_uuid))
         request = http.request(post)
-        request.body
+
+        {cookie:request['Set-Cookie'], body:request.body}
       end
     end
   end
