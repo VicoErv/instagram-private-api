@@ -8,31 +8,18 @@ module Instagram
     attr_reader :password
     attr_reader :language
     attr_reader :data
+    attr_writer :data
     attr_reader :session
+    attr_writer :session
 
-    def initialize(username, password)
+    def initialize(username, password, session = nil, data = nil)
       @username = username
       @password = password
       @language = 'en_US'
-      @session = nil
-      @data ={
-          :id => nil,
-          :full_name => nil,
-          :is_private => nil,
-          :profile_pic_url => nil,
-          :profile_pic_id => nil,
-          :is_verified => nil,
-          :is_business => nil
-      }
+      @session = session
+      @data = data
     end
 
-    def session= value
-      @session = value
-    end
-
-    def session
-      @session
-    end
 
     def md5
       Digest::MD5.hexdigest @username
