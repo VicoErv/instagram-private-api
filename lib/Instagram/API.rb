@@ -8,6 +8,7 @@ require 'Instagram/User'
 
 module Instagram
   module API
+    def self.lookup_user(username, max_id); end
 
     def self.compute_hash(data)
       OpenSSL::HMAC.hexdigest OpenSSL::Digest.new('sha256'), CONSTANTS::PRIVATE_KEY[:SIG_KEY], data
@@ -35,7 +36,7 @@ module Instagram
       compute_hash(data) + '.' + data
     end
 
-    module Accounts
+    module Account
       def self.login(user)
         url = URI.parse(CONSTANTS::URL + 'accounts/login/')
         http = Net::HTTP.new(url.host, url.port)
@@ -50,10 +51,9 @@ module Instagram
                                    :'X-IG-Capabilities' => CONSTANTS::HEADER[:capabilities],
                                    :'X-IG-Connection-Type' => CONSTANTS::HEADER[:type])
         post.initialize_http_header(:'User-Agent' => user.useragent)
-        post.body = 'ig_sig_key_version=4&signed_body=%s' %
-            [Instagram::API.generate_signature(device_id: user.device_id,
-            login_attempt_user: 0, password: user.password, username: user.username,
-            _csrftoken: 'missing', _uuid: Instagram::API.generate_uuid)]
+        post.body = format('ig_sig_key_version=4&signed_body=%s', Instagram::API.generate_signature(device_id: user.device_id,
+                                                                                                    login_attempt_user: 0, password: user.password, username: user.username,
+                                                                                                    _csrftoken: 'missing', _uuid: Instagram::API.generate_uuid))
         request = http.request(post)
         request.body
       end
