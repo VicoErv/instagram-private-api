@@ -4,27 +4,34 @@ require 'Instagram/CONSTANTS'
 
 module Instagram
   class User
-    @username
-    @password
-    @language
-    @version
-
-    def username
-      @username
-    end
-
-    def password
-      @password
-    end
-
-    def language
-      @language
-    end
+    attr_reader :username
+    attr_reader :password
+    attr_reader :language
+    attr_reader :data
+    attr_reader :session
 
     def initialize(username, password)
       @username = username
       @password = password
       @language = 'en_US'
+      @session = nil
+      @data ={
+          :id => nil,
+          :full_name => nil,
+          :is_private => nil,
+          :profile_pic_url => nil,
+          :profile_pic_id => nil,
+          :is_verified => nil,
+          :is_business => nil
+      }
+    end
+
+    def session= value
+      @session = value
+    end
+
+    def session
+      @session
     end
 
     def md5
@@ -50,15 +57,15 @@ module Instagram
 
     def resolution
       %w[3840x2160 1440x2560 2560x1440 1440x2560
-       2560x1440 1080x1920 1080x1920 1080x1920][md5int % 8]
+         2560x1440 1080x1920 1080x1920 1080x1920][md5int % 8]
     end
 
     def info
       line = Device.devices[md5int % Device.devices.count]
       {
-          manufacturer: line[0],
-          device: line[1],
-          model: line[2]
+        manufacturer: line[0],
+        device: line[1],
+        model: line[2]
       }
     end
 
@@ -67,16 +74,13 @@ module Instagram
                resolution, info[:manufacturer], info[:model], info[:device], @language]
 
       {
-          agent: agent.join('; '),
-          version: @version || CONSTANTS::PRIVATE_KEY[:APP_VERSION]
+        agent: agent.join('; '),
+        version: CONSTANTS::PRIVATE_KEY[:APP_VERSION]
       }
     end
 
     def useragent
-      'Instagram %s Android(%s)' % [
-          useragent_hash[:version],
-          useragent_hash[:agent].rstrip
-      ]
+      format('Instagram %s Android(%s)', useragent_hash[:version], useragent_hash[:agent].rstrip)
     end
 
     def device_id
