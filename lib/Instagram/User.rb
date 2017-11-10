@@ -20,6 +20,9 @@ module Instagram
       @data = data
     end
 
+    def search_for_user (username)
+      Instagram::API::Account.search_for_user(self, username)
+    end
 
     def md5
       Digest::MD5.hexdigest @username

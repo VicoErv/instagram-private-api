@@ -96,11 +96,29 @@ module Instagram
         rank_token = '%s_%s' % [pk, Instagram::API.generate_uuid]
         endpoint = 'https://i.instagram.com/api/v1/users/search/'
         param = '?is_typehead=true&q=%s&rank_token=%s' % [username, rank_token]
-        Instagram::API.http(
+        result = Instagram::API.http(
                           url: endpoint + param,
                           method: 'GET',
                           user: user
         )
+
+        json_result = JSON.parse result.body
+        if(json_result['num_results'] > 0)
+          user_result = json_result['users'][0]
+          user_object = Instagram::User.new username, nil
+          user_object.data = {
+              id: user_result['pk'],
+              full_name: user_result['full_name'],
+              is_private: user_result['is_prive'],
+              profile_pic_url: user_result['profile_pic_url'],
+              profile_pic_id: user_result['profile_pic_id'],
+              is_verified: user_result['is_verified'],
+              is_business: user_result['is_business']
+          }
+          user_object
+        else
+          nil
+        end
       end
     end
   end
