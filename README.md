@@ -20,13 +20,13 @@ Or install it yourself as:
 ## Usage
  - Login _for clearly new user_
  ```ruby
- user = User.new 'username', 'password'
+ user = Instagram::User.new 'username', 'password'
  p Instagram::API::Accounts.login user
  ```
  
  - Initiate existing user
  ```ruby
- logged_in_user = User.find(id: 1)
+ logged_in_user = User.find(id: 1) #User as Model
  data = {}
  data[:id] = logged_in_user.pk
  data[:full_name] = logged_in_user.full_name
@@ -37,16 +37,27 @@ Or install it yourself as:
  data[:is_business] = logged_in_user.is_business
  session = logged_in_user.session
  
- user = User.new 'username', nil, data, session #password isn't mandatory, already have session
+ user = Instagram::User.new 'username', nil, data, session #password isn't mandatory, already have session
  p user.search_for_user 'ogiyuka_ippaiwarae216' #then you can use it for any purpose
  ```
  
  - Search for user
  ```ruby
- user = User.new 'username', 'password'
+ user = Instagram::User.new 'username', 'password'
  Instagram::API::Accounts.login user #no need to re-assign, because this method update it for you
  p user.search_for_user 'ogiyuka_ippaiwarae216'
  ```
+ 
+ - User feed
+ ```ruby
+ user = Instagram::User.new 'username', 'password'
+ Instagram::API::Accounts.login user
+ p user.user_media #your feed
+ 
+ user_target = user.search_for_user 'ogiyuka_ippaiwarae216'
+ p user.user_media user_target.data[:id] #ogiyuka_ippaiwarae216 feed, or
+ p user_target.user_media #ogiyuka_ippaiwarae216 feed as shorthand
+```
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
