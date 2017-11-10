@@ -21,7 +21,11 @@ module Instagram
     end
 
     def search_for_user (username)
-      Instagram::API::Account.search_for_user(self, username)
+      Instagram::Account.search_for_user(self, username)
+    end
+
+    def user_media(data = {})
+      Instagram::Feed.user_media(self, data)
     end
 
     def md5
