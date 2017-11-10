@@ -51,8 +51,11 @@ Or install it yourself as:
  p user.user_media #your feed
  
  user_target = user.search_for_user 'ogiyuka_ippaiwarae216'
- p user.user_media user_target.data[:id] #ogiyuka_ippaiwarae216 feed, or
- p user_target.user_media #ogiyuka_ippaiwarae216 feed as shorthand
+ p user.user_media user_id: user_target.data[:id] #ogiyuka_ippaiwarae216 feed, or
+ media = user_target.user_media #ogiyuka_ippaiwarae216 feed as shorthand
+ if media['next_available']
+    p user_target.user_media max_id: media['next_max_id'] #next page
+end
 ```
 ## Development
 
