@@ -38,14 +38,14 @@ Or install it yourself as:
  session = logged_in_user.session
  
  user = User.new 'username', nil, data, session #password isn't mandatory, already have session
- p Instagram::API::Account.search_for_user user, 'ogiyuka_ippaiwarae216' #then you can use it for any purpose
+ p user.search_for_user 'ogiyuka_ippaiwarae216' #then you can use it for any purpose
  ```
  
  - Search for user
  ```ruby
  user = User.new 'username', 'password'
  Instagram::API::Accounts.login user #no need to re-assign, because this method update it for you
- p Instagram::API::Account.search_for_user user, 'ogiyuka_ippaiwarae216'
+ p user.search_for_user 'ogiyuka_ippaiwarae216'
  ```
 ## Development
 
