@@ -43,15 +43,11 @@ Or install it yourself as:
  
  - Search for user
  ```ruby
- user = Instagram::User.new 'username', 'password'
- Instagram::API::Accounts.login user #no need to re-assign, because this method update it for you
  p user.search_for_user 'ogiyuka_ippaiwarae216'
  ```
  
  - User feed
  ```ruby
- user = Instagram::User.new 'username', 'password'
- Instagram::API::Accounts.login user
  p user.user_media #your feed
  
  user_target = user.search_for_user 'ogiyuka_ippaiwarae216'
