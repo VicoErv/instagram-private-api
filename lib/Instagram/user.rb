@@ -28,6 +28,10 @@ module Instagram
       Instagram::Feed.user_media(self, data)
     end
 
+    def user_followers(limit = Float::INFINITY, data = {})
+      Instagram::Feed.user_followers(self, data, limit)
+    end
+
     def md5
       Digest::MD5.hexdigest @username
     end

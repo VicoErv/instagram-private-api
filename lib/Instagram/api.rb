@@ -38,7 +38,7 @@ module Instagram
 
     def self.http(args)
       args[:url] = URI.parse(args[:url])
-      http = Net::HTTP.new(args[:url].host, args[:url].port)
+      http = Net::HTTP.new(args[:url].host, args[:url].port, ENV['INSTAGRAM_PROXY_HOST'], ENV['INSTAGRAM_PROXY_PORT'])
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       request = nil
