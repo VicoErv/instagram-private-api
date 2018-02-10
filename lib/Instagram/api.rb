@@ -7,6 +7,7 @@ require 'json'
 require 'Instagram/User'
 require 'Instagram/account'
 require 'Instagram/feed'
+require 'Instagram/Configuration'
 
 module Instagram
   module API
@@ -48,13 +49,13 @@ module Instagram
         request = Net::HTTP::Get.new(args[:url].path + (!args[:url].nil? ? '?' + args[:url].query : ''))
       end
 
-      request.initialize_http_header(:'User-Agent' => args[:user].useragent,
+      request.initialize_http_header(:'User-Agent' => args.dig(:user)&.useragent,
                                      :Accept => Instagram::CONSTANTS::HEADER[:accept],
                                      :'Accept-Encoding' => Instagram::CONSTANTS::HEADER[:encoding],
-                                     :'Accept-Language' => args[:user].language,
+                                     :'Accept-Language' => args.dig(:user)&.language,
                                      :'X-IG-Capabilities' => Instagram::CONSTANTS::HEADER[:capabilities],
                                      :'X-IG-Connection-Type' => Instagram::CONSTANTS::HEADER[:type],
-                                     :Cookie => (args[:user].session.nil? ? '' : args[:user].session))
+                                     :Cookie => (args.dig(:user)&.session.nil? ? '' : args.dig(:user)&.session))
       request.body = args.key?(:body) ? args[:body] : nil
       http.request(request)
     end

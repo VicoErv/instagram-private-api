@@ -11,17 +11,24 @@ module Instagram
     attr_writer :data
     attr_reader :session
     attr_writer :session
+    attr_reader :config
+    attr_writer :config
 
-    def initialize(username, password, session = nil, data = nil)
+    def initialize(username, password, session = nil, data = nil, config = nil)
       @username = username
       @password = password
       @language = 'en_US'
       @session = session
       @data = data
+      @config = config
     end
 
     def search_for_user (username)
       Instagram::Account.search_for_user(self, username)
+    end
+
+    def search_for_user_graphql (username)
+      Instagram::Account.search_for_graphql(self, username)
     end
 
     def user_media(data = {})
@@ -30,6 +37,10 @@ module Instagram
 
     def user_followers(limit = Float::INFINITY, data = {})
       Instagram::Feed.user_followers(self, data, limit)
+    end
+
+    def user_followers_graphql(limit = Float::INFINITY, data = {})
+      Instagram::Feed.user_followers_graphql(self, data, limit)
     end
 
     def md5

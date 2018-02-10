@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    instagram-private-api (0.1.5)
+    instagram-private-api (0.2.0)
 
 GEM
   remote: https://rubygems.org/
