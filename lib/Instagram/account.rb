@@ -16,6 +16,9 @@ module Instagram
           ))
       )
       json_body = JSON.parse request.body
+
+      raise json_body['message'] if json_body['status'] == 'fail'
+
       logged_in_user = json_body['logged_in_user']
       user.data = {
         id: logged_in_user['pk'],
