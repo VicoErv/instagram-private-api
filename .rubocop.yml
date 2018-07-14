@@ -1,2 +1,4 @@
 AllCops:
   TargetRubyVersion: 2.4
+Layout/EndOfLine:
+  EnforcedStyle: lf
