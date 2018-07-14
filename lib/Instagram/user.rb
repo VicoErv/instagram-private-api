@@ -31,11 +31,11 @@ module Instagram
       Instagram::Account.search_for_graphql(self, username)
     end
 
-    def user_media(data = {})
+    def feed(data = {})
       Instagram::Feed.user_media(self, data)
     end
 
-    def user_followers(limit = Float::INFINITY, data = {})
+    def followers(limit = Float::INFINITY, data = {})
       Instagram::Feed.user_followers(self, data, limit)
     end
 
@@ -80,7 +80,8 @@ module Instagram
 
     def useragent_hash
       agent = [api + '/' + release, dpi + 'dpi',
-               resolution, info[:manufacturer], info[:model], info[:device], @language]
+               resolution, info[:manufacturer],
+               info[:model], info[:device], @language]
 
       {
         agent: agent.join('; '),

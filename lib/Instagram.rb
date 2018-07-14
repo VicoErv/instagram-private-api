@@ -1,4 +1,6 @@
+# frozen_string_literal: true
 
+# Root module
 module Instagram
 end
 

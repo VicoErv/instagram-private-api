@@ -1,6 +1,8 @@
 module Instagram
   module Account
-    def self.login(user, config = Instagram::Configuration.new)
+    def self.login(username, password, config = Instagram::Configuration.new)
+      user = User.new username, password
+
       request = Instagram::API.http(
         url: CONSTANTS::URL + 'accounts/login/',
         method: 'POST',
@@ -32,6 +34,8 @@ module Instagram
       cookies = cookies_array.join('; ')
       user.config = config
       user.session = cookies
+
+      user
     end
 
     def self.search_for_user_graphql(user, username)
