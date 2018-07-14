@@ -20,8 +20,7 @@ Or install it yourself as:
 ## Usage
  - Login _for clearly new user_
  ```ruby
- user = Instagram::User.new 'username', 'password'
- p Instagram::API::Accounts.login user
+ user = Instagram::Account.login 'username', 'password'
  ```
  
  - Initiate existing user
@@ -38,23 +37,23 @@ Or install it yourself as:
  session = logged_in_user.session
  
  user = Instagram::User.new 'username', nil, data, session #password isn't mandatory, already have session
- p user.search_for_user 'ogiyuka_ippaiwarae216' #then you can use it for any purpose
+ p user.search_for_user 'instagram' #then you can use it for any purpose
  ```
  
  - Search for user
  ```ruby
- p user.search_for_user 'ogiyuka_ippaiwarae216'
+ p user.search_for_user 'instagram'
  ```
  
  - User feed
  ```ruby
- p user.user_media #your feed
+ p user.media #your feed
  
- user_target = user.search_for_user 'ogiyuka_ippaiwarae216'
- p user.user_media user_id: user_target.data[:id] #ogiyuka_ippaiwarae216 feed, or
- media = user_target.user_media #ogiyuka_ippaiwarae216 feed as shorthand
+ user_target = user.search_for_user 'instagram'
+ p user.media user_id: user_target.data[:id] #instagram feed, or
+ media = user_target.media #instagram feed as shorthand
  if media['next_available']
-    p user_target.user_media max_id: media['next_max_id'] #next page
+    p user_target.media max_id: media['next_max_id'] #next page
 end
 ```
 ## Development
@@ -62,6 +61,9 @@ end
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+
+## Testing
+testcase is using real instagram account, you can safely store your credential in environment variables.
 
 ## Contributing
 
