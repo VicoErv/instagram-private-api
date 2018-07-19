@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'Instagram/API/version'
 require 'openssl'
 require 'Base64'
@@ -10,7 +12,7 @@ require 'Instagram/feed'
 require 'Instagram/Configuration'
 
 module Instagram
-  module API
+  class V1
     def self.compute_hash(data)
       OpenSSL::HMAC.hexdigest OpenSSL::Digest.new('sha256'), CONSTANTS::PRIVATE_KEY[:SIG_KEY], data
     end
@@ -37,9 +39,29 @@ module Instagram
       compute_hash(data) + '.' + data
     end
 
-    def self.http(args)
+    def post(url, body = nil)
+      @data = { method: 'POST', url: url, body: body }
+      self
+    end
+
+    def with(data)
+      data.each { |k, v| @data[k] = v }
+      self
+    end
+
+    def exec
+      http @data
+    end
+
+    def get(url)
+      @data = {method: 'GET', url: url}
+      self
+    end
+
+    def http(args)
       args[:url] = URI.parse(args[:url])
-      http = Net::HTTP.new(args[:url].host, args[:url].port, ENV['INSTAGRAM_PROXY_HOST'], ENV['INSTAGRAM_PROXY_PORT'])
+      http = Net::HTTP.new(args[:url].host, args[:url].port,
+                           ENV['INSTAGRAM_PROXY_HOST'], ENV['INSTAGRAM_PROXY_PORT'])
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       request = nil
@@ -49,19 +71,19 @@ module Instagram
         request = Net::HTTP::Get.new(args[:url].path + (!args[:url].nil? ? '?' + args[:url].query : ''))
       end
 
-      request.initialize_http_header(:'User-Agent' => args.dig(:user)&.useragent,
-                                     :Accept => Instagram::CONSTANTS::HEADER[:accept],
-                                     :'Accept-Encoding' => Instagram::CONSTANTS::HEADER[:encoding],
-                                     :'Accept-Language' => args.dig(:user)&.language,
-                                     :'X-IG-Capabilities' => Instagram::CONSTANTS::HEADER[:capabilities],
-                                     :'X-IG-Connection-Type' => Instagram::CONSTANTS::HEADER[:type],
-                                     :Cookie => (args.dig(:user)&.session.nil? ? '' : args.dig(:user)&.session))
+      request.initialize_http_header('User-Agent': args[:ua],
+                                     Accept: Instagram::CONSTANTS::HEADER[:accept],
+                                     'Accept-Encoding': Instagram::CONSTANTS::HEADER[:encoding],
+                                     'Accept-Language': args.dig(:user)&.language,
+                                     'X-IG-Capabilities': Instagram::CONSTANTS::HEADER[:capabilities],
+                                     'X-IG-Connection-Type': Instagram::CONSTANTS::HEADER[:type],
+                                     Cookie: args[:session])
       request.body = args.key?(:body) ? args[:body] : nil
       http.request(request)
     end
 
     def self.generate_rank_token(pk)
-      format('%s_%s', pk, Instagram::API.generate_uuid)
+      format('%s_%s', pk, Instagram::V1.generate_uuid)
     end
   end
 end

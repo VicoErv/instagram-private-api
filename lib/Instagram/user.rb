@@ -21,10 +21,11 @@ module Instagram
       @session = session
       @data = data
       @config = config
+      @account = nil
     end
 
     def search_for_user (username)
-      Instagram::Account.search_for_user(self, username)
+      account.search_for_user(self, username)
     end
 
     def search_for_user_graphql (username)
@@ -41,6 +42,20 @@ module Instagram
 
     def user_followers_graphql(limit = Float::INFINITY, data = {})
       Instagram::Feed.user_followers_graphql(self, data, limit)
+    end
+
+    def relationship
+      unless instance_variable_defined? :@relationship
+        @relationship = Relationship.new self
+      end
+
+      @relationship
+    end
+
+    def account
+      @account = Instagram::Account.new if @account.nil?
+
+      @account
     end
 
     def md5
