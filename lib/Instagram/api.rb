@@ -16,6 +16,20 @@ module Instagram
     def self.compute_hash(data)
       OpenSSL::HMAC.hexdigest OpenSSL::Digest.new('sha256'), CONSTANTS::PRIVATE_KEY[:SIG_KEY], data
     end
+    
+    def self.__obj=value
+      @@obj = value
+    end
+    
+    def self.__obj
+      @@obj
+    end
+    
+    def self.singleton
+      @@obj = V1.new unless defined? @@obj
+      
+      @@obj
+    end
 
     def self.generate_uuid
       'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.gsub(/[xy]/) do |c|

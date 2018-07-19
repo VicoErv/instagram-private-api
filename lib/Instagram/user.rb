@@ -22,18 +22,15 @@ module Instagram
       @data = data
       @config = config
       @account = nil
+      @feed = nil
     end
 
-    def search_for_user (username)
+    def search_for_user(username)
       account.search_for_user(self, username)
     end
 
-    def search_for_user_graphql (username)
-      Instagram::Account.search_for_graphql(self, username)
-    end
-
-    def feed(data = {})
-      Instagram::Feed.user_media(self, data)
+    def search_for_user_graphql(username)
+      account.search_for_graphql(self, username)
     end
 
     def followers(limit = Float::INFINITY, data = {})
@@ -56,6 +53,12 @@ module Instagram
       @account = Instagram::Account.new if @account.nil?
 
       @account
+    end
+
+    def feed
+      @feed = Instagram::Feed.new if @feed.nil?
+
+      @feed.using(self)
     end
 
     def md5
