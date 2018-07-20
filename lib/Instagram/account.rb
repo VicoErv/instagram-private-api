@@ -27,6 +27,7 @@ module Instagram
 
       json_body = JSON.parse request.body
       logged_in_user = json_body['logged_in_user']
+
       user.data = {
         id: logged_in_user['pk'],
         full_name: logged_in_user['full_name'],

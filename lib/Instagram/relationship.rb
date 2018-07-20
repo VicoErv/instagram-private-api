@@ -8,13 +8,25 @@ module Instagram
     end
 
     def create(id)
-      api.post("https://i.instagram.com/api/v1/friendships/create/#{id}/",
-               format(
-                 'ig_sig_key_version=4&signed_body=%s',
-                 V1.generate_signature(
-                   user_id: id
-                 )
-               )).with(session: @user.session, ua: @user.useragent).exec
+      JSON.parse api.post("https://i.instagram.com/api/v1/friendships/create/#{id}/",
+                          format(
+                            'ig_sig_key_version=4&signed_body=%s',
+                            V1.generate_signature(
+                              user_id: id
+                            )
+                          )).with(session: @user.session, ua: @user.useragent)
+                            .exec.body
+    end
+
+    def destroy(id)
+      JSON.parse api.post("https://i.instagram.com/api/v1/friendships/destroy/#{id}/",
+                          format(
+                            'ig_sig_key_version=4&signed_body=%s',
+                            V1.generate_signature(
+                              user_id: id
+                            )
+                          )).with(session: @user.session, ua: @user.useragent)
+                            .exec.body
     end
 
     def api
