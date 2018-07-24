@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    instagram-private-api (0.2.0)
+    ig_api (0.0.8)
 
 GEM
   remote: https://rubygems.org/
@@ -28,7 +28,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.16)
-  instagram-private-api!
+  ig_api!
   rake (~> 10.0)
   rspec (~> 3.0)
 

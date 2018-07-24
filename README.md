@@ -1,31 +1,41 @@
 # Instagram::API
 
-Welcome to Instagram-API gem! This Gem is implemented from [huttarichard/instagram-private-api](https://github.com/huttarichard/instagram-private-api) the best `Node-JS` Insgtagram private API
+Welcome to Instagram-API gem! implemented from [huttarichard/instagram-private-api](https://github.com/huttarichard/instagram-private-api)
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'instagram-private-api'
+gem 'ig_api'
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install instagram-private-api
-
 ## Usage
  - Login _for new user_
  ```ruby
-account = Instagram::Account.new
+account = IgApi::Account.new
 
 user = account.login 'username', 'password' #login
 user.feed.timeline_media #timeline media
 search = user.search_for_user 'instagram' #search
 user.relationship.create search.id #follow
+```
+- Rails
+```ruby
+require 'IgApi'
+
+class HomeController < ApplicationController
+  def index
+    account = IgApi::Account.new
+
+    @user = account.login ENV['INSTAGRAM_USER'], ENV['INSTAGRAM_PASSWORD']
+    render :json => @user
+  end
+end
+
 ```
 ## Development
 

@@ -1,9 +1,9 @@
 require 'rspec'
-require 'Instagram'
+require 'IgApi'
 
-describe 'Instagram' do
+describe 'IgApi' do
   # it 'should login' do
-  #   account = Instagram::Account.new
+  #   account = IgApi::Account.new
   #
   #   user = account.login ENV['INSTAGRAM_USER'], ENV['INSTAGRAM_PASSWORD']
   #   search = user.search_for_user('instagram')
@@ -15,7 +15,8 @@ describe 'Instagram' do
   # end
 
   before(:each) do
-    account = Instagram::Account.new
+    account = IgApi::Account.new
+
     @user = account.login ENV['INSTAGRAM_USER'], ENV['INSTAGRAM_PASSWORD']
     @search = @user.search_for_user('instagram')
     @instagram_id = @search.data[:id]
@@ -25,11 +26,12 @@ describe 'Instagram' do
   end
 
   it 'should login' do
-    @user.is_a? Instagram::User.class
+    p @user
+    @user.is_a? IgApi::User.class
   end
 
   it 'should search' do
-    @search.is_a? Instagram::User.class
+    @search.is_a? IgApi::User.class
   end
 
   it 'should instagram id' do

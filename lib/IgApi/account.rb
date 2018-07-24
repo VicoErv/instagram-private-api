@@ -1,26 +1,26 @@
-module Instagram
+module IgApi
   class Account
     def initialized
       @api = nil
     end
 
     def api
-      @api = Instagram::V1.new if @api.nil?
+      @api = IgApi::Http.new if @api.nil?
 
       @api
     end
 
-    def login(username, password, config = Instagram::Configuration.new)
+    def login(username, password, config = IgApi::Configuration.new)
       user = User.new username, password
 
       request = api.post(
-        CONSTANTS::URL + 'accounts/login/',
+        Constants::URL + 'accounts/login/',
         format(
           'ig_sig_key_version=4&signed_body=%s',
-          Instagram::V1.generate_signature(
+          IgApi::Http.generate_signature(
             device_id: user.device_id,
             login_attempt_user: 0, password: user.password, username: user.username,
-            _csrftoken: 'missing', _uuid: Instagram::V1.generate_uuid
+            _csrftoken: 'missing', _uuid: IgApi::Http.generate_uuid
           )
         )
       ).with(ua: user.useragent).exec
@@ -51,7 +51,7 @@ module Instagram
 
     def self.search_for_user_graphql(user, username)
       endpoint = "https://www.instagram.com/#{username}/?__a=1"
-      result = Instagram::API.http(
+      result = IgApi::API.http(
         url: endpoint,
         method: 'GET',
         user: user
@@ -75,7 +75,7 @@ module Instagram
     end
 
     def search_for_user(user, username)
-      rank_token = Instagram::V1.generate_rank_token user.session.scan(/ds_user_id=([\d]+);/)[0][0]
+      rank_token = IgApi::Http.generate_rank_token user.session.scan(/ds_user_id=([\d]+);/)[0][0]
       endpoint = 'https://i.instagram.com/api/v1/users/search/'
       param = format('?is_typehead=true&q=%s&rank_token=%s', username, rank_token)
       result = api.get(endpoint + param)
@@ -84,7 +84,7 @@ module Instagram
       json_result = JSON.parse result.body
       if json_result['num_results'] > 0
         user_result = json_result['users'][0]
-        user_object = Instagram::User.new username, nil
+        user_object = IgApi::User.new username, nil
         user_object.data = {
           id: user_result['pk'],
           full_name: user_result['full_name'],

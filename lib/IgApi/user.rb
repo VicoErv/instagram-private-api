@@ -1,8 +1,7 @@
-require 'digest/md5'
-require 'Instagram/Device'
-require 'Instagram/CONSTANTS'
+require 'IgApi/device'
+require 'IgApi/constants'
 
-module Instagram
+module IgApi
   class User
     attr_reader :username
     attr_reader :password
@@ -34,11 +33,11 @@ module Instagram
     end
 
     def followers(limit = Float::INFINITY, data = {})
-      Instagram::Feed.user_followers(self, data, limit)
+      IgApi::Feed.user_followers(self, data, limit)
     end
 
     def user_followers_graphql(limit = Float::INFINITY, data = {})
-      Instagram::Feed.user_followers_graphql(self, data, limit)
+      IgApi::Feed.user_followers_graphql(self, data, limit)
     end
 
     def relationship
@@ -50,13 +49,13 @@ module Instagram
     end
 
     def account
-      @account = Instagram::Account.new if @account.nil?
+      @account = IgApi::Account.new if @account.nil?
 
       @account
     end
 
     def feed
-      @feed = Instagram::Feed.new if @feed.nil?
+      @feed = IgApi::Feed.new if @feed.nil?
 
       @feed.using(self)
     end
@@ -103,7 +102,7 @@ module Instagram
 
       {
         agent: agent.join('; '),
-        version: CONSTANTS::PRIVATE_KEY[:APP_VERSION]
+        version: Constants::PRIVATE_KEY[:APP_VERSION]
       }
     end
 

@@ -1,22 +1,20 @@
 # frozen_string_literal: true
 
-require 'Instagram/API/version'
+require 'IgApi/version'
 require 'openssl'
-require 'Base64'
-require 'digest/md5'
 require 'net/http'
 require 'json'
-require 'Instagram/User'
-require 'Instagram/account'
-require 'Instagram/feed'
-require 'Instagram/Configuration'
+require 'IgApi/user'
+require 'IgApi/account'
+require 'IgApi/feed'
+require 'IgApi/configuration'
 
-module Instagram
-  class V1
+module IgApi
+  class Http
     def self.compute_hash(data)
-      OpenSSL::HMAC.hexdigest OpenSSL::Digest.new('sha256'), CONSTANTS::PRIVATE_KEY[:SIG_KEY], data
+      OpenSSL::HMAC.hexdigest OpenSSL::Digest.new('sha256'), Constants::PRIVATE_KEY[:SIG_KEY], data
     end
-    
+
     def self.__obj=value
       @@obj = value
     end
@@ -26,7 +24,7 @@ module Instagram
     end
     
     def self.singleton
-      @@obj = V1.new unless defined? @@obj
+      @@obj = Http.new unless defined? @@obj
       
       @@obj
     end
@@ -86,18 +84,18 @@ module Instagram
       end
 
       request.initialize_http_header('User-Agent': args[:ua],
-                                     Accept: Instagram::CONSTANTS::HEADER[:accept],
-                                     'Accept-Encoding': Instagram::CONSTANTS::HEADER[:encoding],
-                                     'Accept-Language': args.dig(:user)&.language,
-                                     'X-IG-Capabilities': Instagram::CONSTANTS::HEADER[:capabilities],
-                                     'X-IG-Connection-Type': Instagram::CONSTANTS::HEADER[:type],
-                                     Cookie: args[:session])
+                                     Accept: IgApi::Constants::HEADER[:accept],
+                                     'Accept-Encoding': IgApi::Constants::HEADER[:encoding],
+                                     'Accept-Language': 'en-US',
+                                     'X-IG-Capabilities': IgApi::Constants::HEADER[:capabilities],
+                                     'X-IG-Connection-Type': IgApi::Constants::HEADER[:type],
+                                     Cookie: args[:session] || '')
       request.body = args.key?(:body) ? args[:body] : nil
       http.request(request)
     end
 
     def self.generate_rank_token(pk)
-      format('%s_%s', pk, Instagram::V1.generate_uuid)
+      format('%s_%s', pk, IgApi::Http.generate_uuid)
     end
   end
 end
