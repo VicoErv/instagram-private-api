@@ -1,9 +1,9 @@
 require 'rspec'
-require 'IgApi'
+require 'ig_api'
 
-describe 'IgApi' do
+describe 'ig_api' do
   # it 'should login' do
-  #   account = IgApi::Account.new
+  #   account = ig_api::Account.new
   #
   #   user = account.login ENV['INSTAGRAM_USER'], ENV['INSTAGRAM_PASSWORD']
   #   search = user.search_for_user('instagram')

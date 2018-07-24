@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'IgApi/version'
+require 'ig_api/version'
 require 'openssl'
 require 'net/http'
 require 'json'
-require 'IgApi/user'
-require 'IgApi/account'
-require 'IgApi/feed'
-require 'IgApi/configuration'
+require 'ig_api/user'
+require 'ig_api/account'
+require 'ig_api/feed'
+require 'ig_api/configuration'
 
 module IgApi
   class Http

@@ -1,5 +1,5 @@
-require 'IgApi/device'
-require 'IgApi/constants'
+require 'ig_api/device'
+require 'ig_api/constants'
 
 module IgApi
   class User

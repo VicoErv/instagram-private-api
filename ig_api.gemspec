@@ -1,7 +1,7 @@
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'IgApi/version'
+require 'ig_api/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'ig_api'
@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['vicoerv']
   spec.email         = ['vicoerv@gmail.com']
 
-  spec.summary       = 'Instagram private api, implemented from huttarichard/instagram-private-api'
-  spec.description   = spec.summary
+  spec.summary       = 'Instagram private api'
+  spec.description   = 'implemented from huttarichard/instagram-private-api'
   spec.homepage      = 'http://www.vicoervanda.com'
   spec.license       = 'MIT'
 

@@ -25,8 +25,6 @@ user.relationship.create search.id #follow
 ```
 - Rails
 ```ruby
-require 'IgApi'
-
 class HomeController < ApplicationController
   def index
     account = IgApi::Account.new
