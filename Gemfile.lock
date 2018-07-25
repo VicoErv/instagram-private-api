@@ -1,12 +1,13 @@
 PATH
   remote: .
   specs:
-    instagram-private-api (0.2.0)
+    ig_api (0.0.9)
 
 GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.3)
+    multipart-post (2.0.0)
     rake (10.5.0)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
@@ -24,12 +25,14 @@ GEM
 
 PLATFORMS
   ruby
+  x64-mingw32
 
 DEPENDENCIES
   bundler (~> 1.16)
-  instagram-private-api!
+  ig_api!
+  multipart-post (~> 2.0.0)
   rake (~> 10.0)
   rspec (~> 3.0)
 
 BUNDLED WITH
-   1.16.0
+   1.16.2

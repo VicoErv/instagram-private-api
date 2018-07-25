@@ -1,60 +1,39 @@
 # Instagram::API
 
-Welcome to Instagram-API gem! This Gem is implemented from [huttarichard/instagram-private-api](https://github.com/huttarichard/instagram-private-api) the best `Node-JS` Insgtagram private API
+Welcome to Instagram-API gem! implemented from [huttarichard/instagram-private-api](https://github.com/huttarichard/instagram-private-api)
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'instagram-private-api'
+gem 'ig_api'
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install instagram-private-api
-
 ## Usage
- - Login _for clearly new user_
+ - Login _for new user_
  ```ruby
- user = Instagram::Account.login 'username', 'password'
- ```
- 
- - Initiate existing user
- ```ruby
- logged_in_user = User.find(id: 1) #User as Model
- data = {}
- data[:id] = logged_in_user.pk
- data[:full_name] = logged_in_user.full_name
- data[:is_private] = logged_in_user.is_private
- data[:profile_pic_url] = logged_in_user.profile_pic_url
- data[:profile_pic_id] = logged_in_user.profile_pic_id
- data[:is_verified] = logged_in_user.is_verified
- data[:is_business] = logged_in_user.is_business
- session = logged_in_user.session
- 
- user = Instagram::User.new 'username', nil, data, session #password isn't mandatory, already have session
- p user.search_for_user 'instagram' #then you can use it for any purpose
- ```
- 
- - Search for user
- ```ruby
- p user.search_for_user 'instagram'
- ```
- 
- - User feed
- ```ruby
- p user.media #your feed
- 
- user_target = user.search_for_user 'instagram'
- p user.media user_id: user_target.data[:id] #instagram feed, or
- media = user_target.media #instagram feed as shorthand
- if media['next_available']
-    p user_target.media max_id: media['next_max_id'] #next page
+account = IgApi::Account.new
+
+user = account.login 'username', 'password' #login
+user.feed.timeline_media #timeline media
+search = user.search_for_user 'instagram' #search
+user.relationship.create search.id #follow
+```
+- Rails
+```ruby
+class HomeController < ApplicationController
+  def index
+    account = IgApi::Account.new
+
+    @user = account.login ENV['INSTAGRAM_USER'], ENV['INSTAGRAM_PASSWORD']
+    render :json => @user
+  end
 end
+
 ```
 ## Development
 

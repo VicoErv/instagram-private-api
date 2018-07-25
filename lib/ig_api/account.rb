@@ -1,25 +1,49 @@
-module Instagram
-  module Account
-    def self.login(username, password, config = Instagram::Configuration.new)
-      user = User.new username, password
+module IgApi
+  class Account
+    def initialized
+      @api = nil
+    end
 
-      request = Instagram::API.http(
-        url: CONSTANTS::URL + 'accounts/login/',
-        method: 'POST',
-        user: user,
-        body: format(
+    def api
+      @api = IgApi::Http.new if @api.nil?
+
+      @api
+    end
+
+    def using(session)
+      user = User.new session: session
+
+      # response = api.get(Constants::URL + 'accounts/current_user/?edit=true')
+      #     .with(ua: user.useragent, session: user.session).exec
+      #
+      # response.body
+      #
+
+      user
+    end
+
+    def login(username, password, config = IgApi::Configuration.new)
+      user = User.new username: username,
+                      password: password
+
+      request = api.post(
+        Constants::URL + 'accounts/login/',
+        format(
           'ig_sig_key_version=4&signed_body=%s',
-          Instagram::API.generate_signature(
+          IgApi::Http.generate_signature(
             device_id: user.device_id,
             login_attempt_user: 0, password: user.password, username: user.username,
-            _csrftoken: 'missing', _uuid: Instagram::API.generate_uuid
-          ))
-      )
+            _csrftoken: 'missing', _uuid: IgApi::Http.generate_uuid
+          )
+        )
+      ).with(ua: user.useragent).exec
+
       json_body = JSON.parse request.body
 
       raise json_body['message'] if json_body['status'] == 'fail'
 
       logged_in_user = json_body['logged_in_user']
+
       user.data = {
         id: logged_in_user['pk'],
         full_name: logged_in_user['full_name'],
@@ -43,7 +67,7 @@ module Instagram
 
     def self.search_for_user_graphql(user, username)
       endpoint = "https://www.instagram.com/#{username}/?__a=1"
-      result = Instagram::API.http(
+      result = IgApi::API.http(
         url: endpoint,
         method: 'GET',
         user: user
@@ -66,20 +90,17 @@ module Instagram
       }
     end
 
-    def self.search_for_user(user, username)
-      rank_token = Instagram::API.generate_rank_token user.session.scan(/ds_user_id=([\d]+);/)[0][0]
+    def search_for_user(user, username)
+      rank_token = IgApi::Http.generate_rank_token user.session.scan(/ds_user_id=([\d]+);/)[0][0]
       endpoint = 'https://i.instagram.com/api/v1/users/search/'
       param = format('?is_typehead=true&q=%s&rank_token=%s', username, rank_token)
-      result = Instagram::API.http(
-        url: endpoint + param,
-        method: 'GET',
-        user: user
-      )
+      result = api.get(endpoint + param)
+                   .with(session: user.session, ua: user.useragent).exec
 
       json_result = JSON.parse result.body
       if json_result['num_results'] > 0
         user_result = json_result['users'][0]
-        user_object = Instagram::User.new username, nil
+        user_object = IgApi::User.new username: username
         user_object.data = {
           id: user_result['pk'],
           full_name: user_result['full_name'],

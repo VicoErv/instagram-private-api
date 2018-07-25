@@ -1,16 +1,16 @@
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'Instagram/API/version'
+require 'ig_api/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'instagram-private-api'
-  spec.version       = Instagram::API::VERSION
+  spec.name          = 'ig_api'
+  spec.version       = IgApi::VERSION
   spec.authors       = ['vicoerv']
   spec.email         = ['vicoerv@gmail.com']
 
-  spec.summary       = 'Instagram private api, implemented from huttarichard/instagram-private-api as best NODE-JS Instagram api'
-  spec.description   = spec.summary
+  spec.summary       = 'Instagram private api'
+  spec.description   = 'implemented from huttarichard/instagram-private-api'
   spec.homepage      = 'http://www.vicoervanda.com'
   spec.license       = 'MIT'
 
@@ -31,6 +31,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler', '~> 1.16'
+  spec.add_development_dependency 'multipart-post', '~> 2.0.0'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
 end

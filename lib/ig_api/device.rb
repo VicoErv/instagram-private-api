@@ -1,5 +1,5 @@
-module Instagram
-  module Device
+module IgApi
+  class Device
     def self.devices
       [
           ["AG Mobile", "AG_Ultra2", "Ultra 2"],

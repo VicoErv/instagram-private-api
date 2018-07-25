@@ -1,46 +1,66 @@
-require 'digest/md5'
-require 'Instagram/Device'
-require 'Instagram/CONSTANTS'
+require 'ig_api/device'
+require 'ig_api/constants'
 
-module Instagram
+module IgApi
   class User
-    attr_reader :username
-    attr_reader :password
-    attr_reader :language
-    attr_reader :data
-    attr_writer :data
-    attr_reader :session
-    attr_writer :session
-    attr_reader :config
-    attr_writer :config
+    attr_reader :password, :language
+    attr_accessor :config, :session, :data
 
-    def initialize(username, password, session = nil, data = nil, config = nil)
-      @username = username
-      @password = password
-      @language = 'en_US'
-      @session = session
-      @data = data
-      @config = config
+    def initialize(params = {})
+      @account = nil
+      @feed = nil
+
+      if params.key? :session
+        @username = params[:session].scan(/ds_user=(.*?);/)[0][0]
+      end
+
+      inject_variables(params)
     end
 
-    def search_for_user (username)
-      Instagram::Account.search_for_user(self, username)
+    def inject_variables(params)
+      params.each { |key, value| instance_variable_set(:"@#{key}", value) }
     end
 
-    def search_for_user_graphql (username)
-      Instagram::Account.search_for_graphql(self, username)
+    def search_for_user(username)
+      account.search_for_user(self, username)
     end
 
-    def feed(data = {})
-      Instagram::Feed.user_media(self, data)
+    def search_for_user_graphql(username)
+      account.search_for_graphql(self, username)
     end
 
     def followers(limit = Float::INFINITY, data = {})
-      Instagram::Feed.user_followers(self, data, limit)
+      IgApi::Feed.user_followers(self, data, limit)
     end
 
     def user_followers_graphql(limit = Float::INFINITY, data = {})
-      Instagram::Feed.user_followers_graphql(self, data, limit)
+      IgApi::Feed.user_followers_graphql(self, data, limit)
+    end
+
+    def relationship
+      unless instance_variable_defined? :@relationship
+        @relationship = Relationship.new self
+      end
+
+      @relationship
+    end
+
+    def account
+      @account = IgApi::Account.new if @account.nil?
+
+      @account
+    end
+
+    def feed
+      @feed = IgApi::Feed.new if @feed.nil?
+
+      @feed.using(self)
+    end
+
+    def thread
+      @thread = IgApi::Thread.new unless defined? @thread
+
+      @thread.using self
     end
 
     def md5
@@ -85,7 +105,7 @@ module Instagram
 
       {
         agent: agent.join('; '),
-        version: CONSTANTS::PRIVATE_KEY[:APP_VERSION]
+        version: Constants::PRIVATE_KEY[:APP_VERSION]
       }
     end
 
