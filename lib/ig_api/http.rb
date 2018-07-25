@@ -8,6 +8,7 @@ require 'ig_api/user'
 require 'ig_api/account'
 require 'ig_api/feed'
 require 'ig_api/configuration'
+require 'net/http/post/multipart'
 
 module IgApi
   class Http
@@ -56,6 +57,11 @@ module IgApi
       self
     end
 
+    def multipart(url, body = nil)
+      @data = { method: 'MULTIPART', url: url, body: body }
+      self
+    end
+
     def with(data)
       data.each { |k, v| @data[k] = v }
       self
@@ -81,16 +87,29 @@ module IgApi
         request = Net::HTTP::Post.new(args[:url].path)
       elsif args[:method] == 'GET'
         request = Net::HTTP::Get.new(args[:url].path + (!args[:url].nil? ? '?' + args[:url].query : ''))
+      elsif args[:method] == 'MULTIPART'
+        request = Net::HTTP::Post::Multipart.new args[:url].path, args[:body],
+                                                 'User-Agent': args[:ua],
+                                                  Accept: IgApi::Constants::HEADER[:accept],
+                                                  'Accept-Encoding': IgApi::Constants::HEADER[:encoding],
+                                                  'Accept-Language': 'en-US',
+                                                  'X-IG-Capabilities': IgApi::Constants::HEADER[:capabilities],
+                                                  'X-IG-Connection-Type': IgApi::Constants::HEADER[:type],
+                                                  Cookie: args[:session] || ''
       end
 
-      request.initialize_http_header('User-Agent': args[:ua],
-                                     Accept: IgApi::Constants::HEADER[:accept],
-                                     'Accept-Encoding': IgApi::Constants::HEADER[:encoding],
-                                     'Accept-Language': 'en-US',
-                                     'X-IG-Capabilities': IgApi::Constants::HEADER[:capabilities],
-                                     'X-IG-Connection-Type': IgApi::Constants::HEADER[:type],
-                                     Cookie: args[:session] || '')
-      request.body = args.key?(:body) ? args[:body] : nil
+      unless args[:method] == 'MULTIPART'
+        request.initialize_http_header('User-Agent': args[:ua],
+                                       Accept: IgApi::Constants::HEADER[:accept],
+                                       'Accept-Encoding': IgApi::Constants::HEADER[:encoding],
+                                       'Accept-Language': 'en-US',
+                                       'X-IG-Capabilities': IgApi::Constants::HEADER[:capabilities],
+                                       'X-IG-Connection-Type': IgApi::Constants::HEADER[:type],
+                                       Cookie: args[:session] || '')
+
+        request.body = args.key?(:body) ? args[:body] : nil
+      end
+
       http.request(request)
     end
 

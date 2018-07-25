@@ -10,8 +10,21 @@ module IgApi
       @api
     end
 
+    def using(session)
+      user = User.new session: session
+
+      # response = api.get(Constants::URL + 'accounts/current_user/?edit=true')
+      #     .with(ua: user.useragent, session: user.session).exec
+      #
+      # response.body
+      #
+
+      user
+    end
+
     def login(username, password, config = IgApi::Configuration.new)
-      user = User.new username, password
+      user = User.new username: username,
+                      password: password
 
       request = api.post(
         Constants::URL + 'accounts/login/',
@@ -84,7 +97,7 @@ module IgApi
       json_result = JSON.parse result.body
       if json_result['num_results'] > 0
         user_result = json_result['users'][0]
-        user_object = IgApi::User.new username, nil
+        user_object = IgApi::User.new username: username
         user_object.data = {
           id: user_result['pk'],
           full_name: user_result['full_name'],

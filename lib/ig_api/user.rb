@@ -3,25 +3,22 @@ require 'ig_api/constants'
 
 module IgApi
   class User
-    attr_reader :username
-    attr_reader :password
-    attr_reader :language
-    attr_reader :data
-    attr_writer :data
-    attr_reader :session
-    attr_writer :session
-    attr_reader :config
-    attr_writer :config
+    attr_reader :password, :language
+    attr_accessor :config, :session, :data
 
-    def initialize(username, password, session = nil, data = nil, config = nil)
-      @username = username
-      @password = password
-      @language = 'en_US'
-      @session = session
-      @data = data
-      @config = config
+    def initialize(params = {})
       @account = nil
       @feed = nil
+
+      if params.key? :session
+        @username = params[:session].scan(/ds_user=(.*?);/)[0][0]
+      end
+
+      inject_variables(params)
+    end
+
+    def inject_variables(params)
+      params.each { |key, value| instance_variable_set(:"@#{key}", value) }
     end
 
     def search_for_user(username)
@@ -58,6 +55,12 @@ module IgApi
       @feed = IgApi::Feed.new if @feed.nil?
 
       @feed.using(self)
+    end
+
+    def thread
+      @thread = IgApi::Thread.new unless defined? @thread
+
+      @thread.using self
     end
 
     def md5

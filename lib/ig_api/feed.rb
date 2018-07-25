@@ -6,9 +6,9 @@ module IgApi
 
     def using user
       @user = {
-          id: user.data[:id],
-          session: user.session,
-          ua: user.useragent
+        id: user.data[:id],
+        session: user.session,
+        ua: user.useragent
       }
       self
     end
@@ -18,9 +18,8 @@ module IgApi
 
       rank_token = IgApi::Http.generate_rank_token @user[:id]
       endpoint = "https://i.instagram.com/api/v1/feed/user/#{user_id}/"
-      param = "?rank_token=#{rank_token}"
-      result = @api.get(endpoint + param)
-        .with(session: @user[:session], ua: @user[:ua]).exec
+      result = @api.get(endpoint + "?rank_token=#{rank_token}")
+                   .with(session: @user[:session], ua: @user[:ua]).exec
 
       JSON.parse result.body
     end
