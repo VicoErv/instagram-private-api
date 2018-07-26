@@ -4,7 +4,7 @@ require 'ig_api/constants'
 module IgApi
   class User
     attr_reader :password, :language
-    attr_accessor :config, :session, :data
+    attr_accessor :username, :config, :session, :data
 
     def initialize(params = {})
       @account = nil
