@@ -8,6 +8,7 @@ require 'ig_api/user'
 require 'ig_api/account'
 require 'ig_api/feed'
 require 'ig_api/configuration'
+require 'net/http/post/multipart'
 
 module IgApi
   class Http
