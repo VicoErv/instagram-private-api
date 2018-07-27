@@ -8,7 +8,6 @@ require 'ig_api/user'
 require 'ig_api/account'
 require 'ig_api/feed'
 require 'ig_api/configuration'
-require 'net/http/post/multipart'
 
 module IgApi
   class Http
@@ -16,17 +15,17 @@ module IgApi
       OpenSSL::HMAC.hexdigest OpenSSL::Digest.new('sha256'), Constants::PRIVATE_KEY[:SIG_KEY], data
     end
 
-    def self.__obj=value
+    def self.__obj=(value)
       @@obj = value
     end
-    
+
     def self.__obj
       @@obj
     end
-    
+
     def self.singleton
       @@obj = Http.new unless defined? @@obj
-      
+
       @@obj
     end
 
@@ -90,12 +89,12 @@ module IgApi
       elsif args[:method] == 'MULTIPART'
         request = Net::HTTP::Post::Multipart.new args[:url].path, args[:body],
                                                  'User-Agent': args[:ua],
-                                                  Accept: IgApi::Constants::HEADER[:accept],
-                                                  'Accept-Encoding': IgApi::Constants::HEADER[:encoding],
-                                                  'Accept-Language': 'en-US',
-                                                  'X-IG-Capabilities': IgApi::Constants::HEADER[:capabilities],
-                                                  'X-IG-Connection-Type': IgApi::Constants::HEADER[:type],
-                                                  Cookie: args[:session] || ''
+                                                 Accept: IgApi::Constants::HEADER[:accept],
+                                                 'Accept-Encoding': IgApi::Constants::HEADER[:encoding],
+                                                 'Accept-Language': 'en-US',
+                                                 'X-IG-Capabilities': IgApi::Constants::HEADER[:capabilities],
+                                                 'X-IG-Connection-Type': IgApi::Constants::HEADER[:type],
+                                                 Cookie: args[:session] || ''
       end
 
       unless args[:method] == 'MULTIPART'
