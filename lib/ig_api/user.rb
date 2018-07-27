@@ -4,7 +4,7 @@ require 'ig_api/constants'
 module IgApi
   class User
     attr_reader :password, :language
-    attr_accessor :config, :session, :data
+    attr_accessor :username, :config, :session, :data
 
     def initialize(params = {})
       @account = nil
@@ -12,6 +12,14 @@ module IgApi
 
       if params.key? :session
         @username = params[:session].scan(/ds_user=(.*?);/)[0][0]
+
+        id = params[:session].scan(/ds_user_id=(\d+)/)[0][0]
+
+        if data.nil?
+          @data = { id: id }
+        else
+          @data[:id] = id
+        end
       end
 
       inject_variables(params)

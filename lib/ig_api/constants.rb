@@ -3,13 +3,13 @@
 module IgApi
   module Constants
     PRIVATE_KEY = {
-      SIG_KEY: '0443b39a54b05f064a4917a3d1da4d6524a3fb0878eacabf1424515051674daa',
+      SIG_KEY: '673581b0ddb792bf47da5f9ca816b613d7996f342723aa06993a3f0552311c7d',
       SIG_VERSION: '4',
-      APP_VERSION: '10.33.0'
+      APP_VERSION: '42.0.0.19.95'
     }.freeze
 
     HEADER = {
-      capabilities: '3QI=',
+      capabilities: '3brTPw==',
       type: 'WIFI',
       host: 'i.instagram.com',
       connection: 'Close',

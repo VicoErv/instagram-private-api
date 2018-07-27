@@ -31,7 +31,11 @@ describe 'ig_api' do
     @search = @user.search_for_user 'vicoerv'
     @user_id = @search.data[:id]
 
-    p @user.thread.configure_text [@search.data[:id]], 'text you would love to send'
+    # p @user.feed.story [@user_id]
+
+    p @user.thread.configure_story [@search.data[:id].to_s],
+                                   '1832367651431938903_259220806',
+                                   '9gagggggg'
     # @user.is_a? IgApi::User.class
   end
   #
