@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    ig_api (0.0.12)
-      rspec (~> 3.0)
+    ig_api (0.0.15)
+      multipart-post (~> 2.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -31,8 +31,8 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.16)
   ig_api!
-  multipart-post (~> 2.0.0)
   rake (~> 10.0)
+  rspec (~> 3.0)
 
 BUNDLED WITH
    1.16.3

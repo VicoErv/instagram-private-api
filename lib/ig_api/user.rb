@@ -12,6 +12,14 @@ module IgApi
 
       if params.key? :session
         @username = params[:session].scan(/ds_user=(.*?);/)[0][0]
+
+        id = params[:session].scan(/ds_user_id=(\d+)/)[0][0]
+
+        if data.nil?
+          @data = { id: id }
+        else
+          @data[:id] = id
+        end
       end
 
       inject_variables(params)
