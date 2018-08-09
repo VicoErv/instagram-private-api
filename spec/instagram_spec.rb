@@ -33,9 +33,10 @@ describe 'ig_api' do
 
     # p @user.feed.story [@user_id]
 
-    p @user.thread.configure_story [@search.data[:id].to_s],
-                                   '1832367651431938903_259220806',
-                                   '9gagggggg'
+    media = IgApi::Media.new(@user)
+    likes = media.like('1735389257830282125_1626347005')
+
+    p likes
     # @user.is_a? IgApi::User.class
   end
   #

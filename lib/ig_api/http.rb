@@ -86,7 +86,7 @@ module IgApi
       if args[:method] == 'POST'
         request = Net::HTTP::Post.new(args[:url].path)
       elsif args[:method] == 'GET'
-        request = Net::HTTP::Get.new(args[:url].path + (!args[:url].nil? ? '?' + args[:url].query : ''))
+        request = Net::HTTP::Get.new(args[:url].path + (!args[:url].query.nil? ? '?' + args[:url].query : ''))
       elsif args[:method] == 'MULTIPART'
         request = Net::HTTP::Post::Multipart.new args[:url].path, args[:body],
                                                  'User-Agent': args[:ua],
