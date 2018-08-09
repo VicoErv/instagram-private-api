@@ -2,6 +2,7 @@
 
 require 'ig_api/http'
 require 'ig_api/user'
+require 'ig_api/media'
 require 'ig_api/device'
 require 'ig_api/thread'
 require 'ig_api/constants'

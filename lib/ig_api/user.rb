@@ -9,6 +9,7 @@ module IgApi
     def initialize(params = {})
       @account = nil
       @feed = nil
+      @api = IgApi::Http.singleton
 
       if params.key? :session
         @username = params[:session].scan(/ds_user=(.*?);/)[0][0]
@@ -31,6 +32,14 @@ module IgApi
 
     def search_for_user(username)
       account.search_for_user(self, username)
+    end
+
+    def info_by_name(username)
+      response = @api.get(Constants::URL + "users/#{username}/usernameinfo/")
+                     .with(ua: useragent, session: session)
+                     .exec
+
+      JSON.parse response.body
     end
 
     def search_for_user_graphql(username)

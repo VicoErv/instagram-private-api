@@ -1,4 +1,5 @@
 require 'uri'
+require 'net/http/post/multipart'
 
 module IgApi
   class Thread
