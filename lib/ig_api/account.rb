@@ -13,9 +13,7 @@ module IgApi
     end
 
     def using(session)
-      user = User.new session: session
-
-      user
+      User.new session: session
     end
 
     def login(username, password, config = IgApi::Configuration.new)
