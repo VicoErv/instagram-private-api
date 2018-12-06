@@ -1,3 +1,5 @@
+require 'ostruct'
+
 module IgApi
   class Feed
     def initialize
@@ -33,7 +35,7 @@ module IgApi
       result = @api.get(endpoint + "?rank_token=#{rank_token}")
                    .with(session: @user[:session], ua: @user[:ua]).exec
 
-      JSON.parse result.body
+      JSON.parse result.body, object_class: OpenStruct
     end
 
     def self.user_followers(user, data, limit)
@@ -59,7 +61,7 @@ module IgApi
         method: 'GET',
         user: user
       )
-      JSON.parse result.body
+      JSON.parse result.body, object_class: OpenStruct
     end
   end
 end

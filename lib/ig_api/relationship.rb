@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'ostruct'
 
 module IgApi
   class Relationship
@@ -15,7 +16,7 @@ module IgApi
                               user_id: id
                             )
                           )).with(session: @user.session, ua: @user.useragent)
-                            .exec.body
+                            .exec.body, object_class: OpenStruct
     end
 
     def destroy(id)
@@ -26,7 +27,7 @@ module IgApi
                               user_id: id
                             )
                           )).with(session: @user.session, ua: @user.useragent)
-                            .exec.body
+                            .exec.body, object_class: OpenStruct
     end
 
     def api

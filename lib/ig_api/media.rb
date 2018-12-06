@@ -1,3 +1,5 @@
+require 'ostruct'
+
 module IgApi
   class Media
     def self.get_id_from_code(code)
@@ -33,7 +35,7 @@ module IgApi
           .with(ua: @user.useragent, session: @user.session)
           .exec
 
-      JSON.parse response.body
+      JSON.parse response.body, object_class: OpenStruct
     end
 
     def like(media_id)
@@ -43,7 +45,7 @@ module IgApi
 
       raise Exception, response['message'] if response['status'] == 'fail'
 
-      JSON.parse response.body
+      JSON.parse response.body, object_class: OpenStruct
     end
   end
 end

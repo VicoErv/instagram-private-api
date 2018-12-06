@@ -1,3 +1,4 @@
+require 'ostruct'
 require 'ig_api/device'
 require 'ig_api/constants'
 
@@ -39,7 +40,7 @@ module IgApi
                      .with(ua: useragent, session: session)
                      .exec
 
-      JSON.parse response.body
+      JSON.parse response.body, object_class: OpenStruct
     end
 
     def search_for_user_graphql(username)
