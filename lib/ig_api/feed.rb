@@ -8,7 +8,7 @@ module IgApi
 
     def using user
       @user = {
-        id: user.data[:id],
+        id: user.data[:pk],
         session: user.session,
         ua: user.useragent
       }
