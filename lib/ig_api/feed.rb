@@ -27,13 +27,16 @@ module IgApi
       response.body
     end
 
-    def timeline_media
+    def timeline_media(params = {})
       user_id = @user[:id]
 
       rank_token = IgApi::Http.generate_rank_token @user[:id]
-      endpoint = "https://i.instagram.com/api/v1/feed/user/#{user_id}/"
-      result = @api.get(endpoint + "?rank_token=#{rank_token}")
-                   .with(session: @user[:session], ua: @user[:ua]).exec
+      endpoint = Constants::URL + "feed/user/#{user_id}/"
+      endpoint << "?rank_token=#{rank_token}"
+      endpoint << "&max_id=#{params[:max_id]}" if params[:max_id]
+      result = @api.get(endpoint)
+                   .with(session: @user[:session], ua: @user[:ua])
+                   .exec
 
       JSON.parse result.body, object_class: OpenStruct
     end
