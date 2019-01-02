@@ -33,7 +33,7 @@ module IgApi
       rank_token = IgApi::Http.generate_rank_token @user[:id]
       endpoint = Constants::URL + "feed/user/#{user_id}/"
       endpoint << "?rank_token=#{rank_token}"
-      endpoint << "&max_id=#{params[:max_id]}" if params[:max_id]
+      params.each { |k, v| endpoint << "&#{k}=#{v}" }
       result = @api.get(endpoint)
                    .with(session: @user[:session], ua: @user[:ua])
                    .exec
