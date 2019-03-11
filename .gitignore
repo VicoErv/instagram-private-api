@@ -1,5 +1,6 @@
 .idea 
-Gemfile.lock 
-*.gem 
-Gemfile.lock 
+Gemfile.lock
+*.gem
+Gemfile.lock
 .vscode
+.ruby-version

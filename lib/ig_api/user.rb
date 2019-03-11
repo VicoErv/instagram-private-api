@@ -35,6 +35,10 @@ module IgApi
       account.search_for_user(self, username)
     end
 
+    def direct_messages(limit = nil)
+      account.list_direct_messages(self, limit)
+    end
+
     def info_by_name(username)
       response = @api.get(Constants::URL + "users/#{username}/usernameinfo/")
                      .with(ua: useragent, session: session)
