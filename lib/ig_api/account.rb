@@ -104,7 +104,7 @@ module IgApi
           older_messages = result.thread.items.sort_by(&:timestamp) # returns oldest --> newest
           all_messages << {
             thread_id: thread_id,
-            recipient_username: thread.users.first.username, # possible to have 1+
+            recipient_username: thread.users.first.try(:username), # possible to have 1+ or none (e.g. 'mention')
             conversations: older_messages << thread.items.first
           }
         end
