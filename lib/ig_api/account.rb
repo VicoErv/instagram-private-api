@@ -101,17 +101,12 @@ module IgApi
         result = JSON.parse result.body, object_class: OpenStruct
 
         if result.thread && result.thread.items.count > 0
-          begin
-            older_messages = result.thread.items.sort_by(&:timestamp) # returns oldest --> newest
-            all_messages << {
-              thread_id: thread_id,
-              recipient_username: thread.users.first.username, # possible to have 1+
-              conversations: older_messages << thread.items.first
-            }
-          rescue => e
-            puts "ERROR: #{e.message} // THREAD: #{thread}"
-            next
-          end
+          older_messages = result.thread.items.sort_by(&:timestamp) # returns oldest --> newest
+          all_messages << {
+            thread_id: thread_id,
+            recipient_username: thread.users.first.try(:username), # possible to have 1+ or none (e.g. 'mention')
+            conversations: older_messages << thread.items.first
+          }
         end
       end
 
