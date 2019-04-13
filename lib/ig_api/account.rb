@@ -118,6 +118,12 @@ module IgApi
             recipient_username: thread.users.first.try(:username), # possible to have 1+ or none (e.g. 'mention')
             conversations: older_messages << thread.items.first
           }
+        elsif result.thread && result.thread.last_permanent_item
+          all_messages << {
+            thread_id: thread_id,
+            recipient_username: thread.users.first.try(:username),
+            conversations: result.thread.last_permanent_item
+          }
         end
       end
 
