@@ -122,7 +122,7 @@ module IgApi
           all_messages << {
             thread_id: thread_id,
             recipient_username: thread.users.first.try(:username),
-            conversations: result.thread.last_permanent_item
+            conversations: [result.thread.last_permanent_item]
           }
         end
       end
