@@ -34,6 +34,8 @@ module IgApi
 
       response = JSON.parse request.body, object_class: OpenStruct
 
+      binding.pry
+
       raise response.message if response.status == 'fail'
 
       logged_in_user = response.logged_in_user
