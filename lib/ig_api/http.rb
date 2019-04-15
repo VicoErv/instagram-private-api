@@ -48,7 +48,8 @@ module IgApi
 
     def self.generate_signature(data)
       data = data.to_json
-      compute_hash(data) + '.' + data
+      hash = compute_hash(data) + '.' + data
+      CGI.escape(hash)
     end
 
     def post(url, body = nil)
