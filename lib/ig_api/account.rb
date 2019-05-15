@@ -32,7 +32,10 @@ module IgApi
         )
       ).with(ua: user.useragent).exec
 
+
       response = JSON.parse request.body, object_class: OpenStruct
+
+      return response if response.error_type == 'checkpoint_challenge_required'
 
       raise response.message if response.status == 'fail'
 
@@ -40,7 +43,7 @@ module IgApi
       user.data = logged_in_user
 
       cookies_array = []
-      all_cookies = request.get_fields('set-cookie')
+      all_cookies = request.get_fields('set-cookie') || []
       all_cookies.each do |cookie|
         cookies_array.push(cookie.split('; ')[0])
       end
@@ -122,7 +125,7 @@ module IgApi
           all_messages << {
             thread_id: thread_id,
             recipient_username: thread.users.first.try(:username),
-            conversations: [result.thread.last_permanent_item]
+            conversations: result.thread.last_permanent_item
           }
         end
       end
