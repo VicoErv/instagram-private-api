@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ig_api (0.0.19)
+    ig_api (0.0.25)
       multipart-post (~> 2.0.0)
 
 GEM

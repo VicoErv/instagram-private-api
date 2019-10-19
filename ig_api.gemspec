@@ -6,7 +6,7 @@ require 'ig_api/version'
 Gem::Specification.new do |spec|
   spec.name          = 'ig_api'
   spec.version       = IgApi::VERSION
-  spec.authors       = ['vicoerv']
+  spec.authors       = ['vicoerv', 'ryanckulp']
   spec.email         = ['vicoerv@gmail.com']
 
   spec.summary       = 'Instagram private api'

@@ -32,7 +32,10 @@ module IgApi
         )
       ).with(ua: user.useragent).exec
 
+
       response = JSON.parse request.body, object_class: OpenStruct
+
+      return response if response.error_type == 'checkpoint_challenge_required'
 
       raise response.message if response.status == 'fail'
 
@@ -40,7 +43,7 @@ module IgApi
       user.data = logged_in_user
 
       cookies_array = []
-      all_cookies = request.get_fields('set-cookie')
+      all_cookies = request.get_fields('set-cookie') || []
       all_cookies.each do |cookie|
         cookies_array.push(cookie.split('; ')[0])
       end
@@ -81,15 +84,25 @@ module IgApi
       base_url = 'https://i.instagram.com/api/v1'
       rank_token = IgApi::Http.generate_rank_token user.session.scan(/ds_user_id=([\d]+);/)[0][0]
 
-      endpoint = base_url + "/direct_v2/inbox/?persistentBadging=true&use_unified_inbox=true&show_threads=true&limit=#{limit}"
+      inbox_params = "?persistentBadging=true&use_unified_inbox=true&show_threads=true&limit=#{limit}"
+
+      # each type of message requires a uniqe fetch
+      inbox_endpoint = base_url + "/direct_v2/inbox/#{inbox_params}"
+      inbox_pending_endpoint = base_url + "/direct_v2/pending_inbox/#{inbox_params}"
+
       param = format('&is_typehead=true&q=%s&rank_token=%s', user.username, rank_token)
 
-      result = api.get(endpoint + param).with(session: user.session, ua: user.useragent).exec
-      result = JSON.parse result.body, object_class: OpenStruct
+      inbox_result = api.get(inbox_endpoint + param).with(session: user.session, ua: user.useragent).exec
+      inbox_result = JSON.parse inbox_result.body, object_class: OpenStruct
+
+      inbox_pending_result = api.get(inbox_pending_endpoint + param).with(session: user.session, ua: user.useragent).exec
+      inbox_pending_result = JSON.parse inbox_pending_result.body, object_class: OpenStruct
+
+      threads = ((inbox_result.inbox.threads || []) + (inbox_pending_result.inbox.threads || [])).flatten
+      all_messages = []
 
       # fetch + combine past messages from parent thread
-      all_messages = []
-      result.inbox.threads.each do |thread|
+      threads.each do |thread|
         # thread_id = thread.thread_v2_id # => 17953972372244048 DO NOT USE V2!
         thread_id = thread.thread_id # => 340282366841710300949128223810596505168
         cursor_id = thread.oldest_cursor # '28623389310319272791051433794338816'
@@ -102,10 +115,17 @@ module IgApi
 
         if result.thread && result.thread.items.count > 0
           older_messages = result.thread.items.sort_by(&:timestamp) # returns oldest --> newest
+
           all_messages << {
             thread_id: thread_id,
-            recipient_username: thread.users.first.username, # possible to have 1+
+            recipient_username: thread.users.first.try(:username), # possible to have 1+ or none (e.g. 'mention')
             conversations: older_messages << thread.items.first
+          }
+        elsif result.thread && result.thread.last_permanent_item
+          all_messages << {
+            thread_id: thread_id,
+            recipient_username: thread.users.first.try(:username),
+            conversations: result.thread.last_permanent_item
           }
         end
       end
